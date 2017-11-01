@@ -29,3 +29,5 @@ int get(list lst, int key);
 void list_free(list lst);
 
 size_t list_len(list lst);
+int list_sum(list lst);
+node* list_node_at(list lst, size_t at);

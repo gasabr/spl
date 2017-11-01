@@ -121,3 +121,33 @@ size_t list_len(list lst) {
 
 	return list_len;
 }
+
+
+int list_sum(list lst) {
+	node* current_node = lst;
+	size_t sum = 0;
+
+	while (current_node != NULL) {
+		sum += current_node->value;
+		current_node = current_node->next;
+	}
+
+	return sum;
+}
+
+
+node* list_node_at(list lst, size_t at) {
+	size_t index = 0;
+	node* current_node = lst;
+
+	while (current_node != NULL && index < at) {
+		current_node = current_node->next;
+		index += 1;
+	}
+
+	if (current_node == NULL) {
+		return NULL;
+	} else {
+		return current_node;
+	}
+}
