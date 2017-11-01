@@ -9,13 +9,14 @@ typedef struct Node {
 } node;
 
 
-typedef struct List {
-	node* root;
-	size_t len ;
-} list;
+typedef node* list;
 
-
-void print_list(list* const);
+// initialisation of the list
 list list_create(int key, int value);
-int list_add_back(list* const lst, node* new_node);
-int list_add_front(list* const lst, const node new_node);
+list list_read();
+
+void print_list(list const);
+
+// adding elements
+int list_add_back(list const lst, list new_node);
+int list_add_front(list const lst, const node new_node);
