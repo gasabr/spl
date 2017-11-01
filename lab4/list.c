@@ -31,12 +31,7 @@ list list_read() {
 		if (feof(stdin)) {
 			break;
 		}
-		t_node = malloc(sizeof(node));
-
-		t_node->key = read_key;
-		t_node->value = 1 << read_key;
-		t_node->next = root;
-
+		t_node = allocate_node(read_key, 1 << read_key, root);
 		root = t_node;
 	}
 	
@@ -60,27 +55,42 @@ void print_list(list const lst) {
 }
 
 
-int list_add_back(list lst, int key, int value) {
-	// adds node to the back of the list, returns resulting list size
-	node* t_node = lst;
+void list_add_back(list* lst, int key, int value) {
+	// adds node to the back of the list
+	node* t_node = *lst;
 	node* new_node = allocate_node(key, value, NULL);
-	int list_size=1;
 
 	if (t_node == NULL) {
 		lst = new_node;
-		return list_size;
+		return;
 	}
 
 	while (t_node->next != NULL) {
 		t_node = t_node->next;
-		list_size += 1;
 	}
 
 	t_node->next = new_node;
-	return list_size+1;
+	return;
 }
 
 
-int list_add_front(list lst, int key, int value) {
-	return 0;
+void list_add_front(list* lst, int key, int value) {
+	node* current_root = *lst;
+	*lst = allocate_node(key, value, current_root);
+
+	return;
+}
+
+int get(list lst, const int key) {
+	node* current_node = lst;
+	while (current_node->key != key && current_node != NULL) {
+		current_node = current_node->next;
+	}
+
+	if (current_node == NULL) {
+		return 0;
+	}
+	else {
+		return current_node->value;
+	}
 }

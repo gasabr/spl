@@ -21,5 +21,7 @@ list list_read();
 void print_list(list const);
 
 // adding elements
-int list_add_back(list lst, int key, int value);
-int list_add_front(list lst, int key, int value);
+void list_add_back(list* lst, int key, int value);
+void list_add_front(list* lst, int key, int value);
+
+int get(list lst, int key);
