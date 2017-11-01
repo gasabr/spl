@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>		// malloc
 
 
 typedef struct Node {
@@ -11,6 +12,8 @@ typedef struct Node {
 
 typedef node* list;
 
+node* allocate_node(int key, int value, node* next);
+
 // initialisation of the list
 list list_create(int key, int value);
 list list_read();
@@ -18,5 +21,5 @@ list list_read();
 void print_list(list const);
 
 // adding elements
-int list_add_back(list const lst, list new_node);
-int list_add_front(list const lst, const node new_node);
+int list_add_back(list lst, int key, int value);
+int list_add_front(list lst, int key, int value);

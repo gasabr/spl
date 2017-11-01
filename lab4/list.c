@@ -1,6 +1,16 @@
 #include "list.h"
 
 
+node* allocate_node(int key, int value, node* next) {
+	node* new_node = malloc(sizeof(node));
+	new_node->key = key;
+	new_node->value = value;
+	new_node->next = next;
+
+	return new_node;
+}
+
+
 list list_create(int key, int value) {
 	list root;
 	root->key = key;
@@ -50,31 +60,27 @@ void print_list(list const lst) {
 }
 
 
-/* int list_add_back(list* const lst, node* new_node) { */
-/*     node *t_node = lst->root; */
-/*     int x; */
+int list_add_back(list lst, int key, int value) {
+	// adds node to the back of the list, returns resulting list size
+	node* t_node = lst;
+	node* new_node = allocate_node(key, value, NULL);
+	int list_size=1;
 
-/*     if (lst->len == 0) { */
-/*         printf("len 0 case\n"); */
-/*         lst->root = new_node; */
-/*         lst->len = 1; */
-/*     } else { */
-/*         [> t_node = lst->root; <] */
-/*         printf("inside = %lu\n", lst->root->next); */
-/*         [> while (t_node->next != NULL) { <] */
-/*         [>     t_node = t_node->next; <] */
-/*         [>     printf("%lu\n", t_node); <] */
-/*         [>     scanf("%d", &x); <] */
-/*         [> } <] */
-/*     } */
-/*     t_node->next = new_node; */
-/*     printf("t_node.key = %d\n", t_node->key); */
-/*     lst->len += 1; */
-	
-/*     return lst->len; */
-/* } */
+	if (t_node == NULL) {
+		lst = new_node;
+		return list_size;
+	}
+
+	while (t_node->next != NULL) {
+		t_node = t_node->next;
+		list_size += 1;
+	}
+
+	t_node->next = new_node;
+	return list_size+1;
+}
 
 
-/* int list_add_front(list* lst, node new_node) { */
-/*     return 0; */
-/* } */
+int list_add_front(list lst, int key, int value) {
+	return 0;
+}
