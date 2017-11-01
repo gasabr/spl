@@ -21,6 +21,20 @@ list list_create(int key, int value) {
 }
 
 
+void list_free(list lst) {
+	node* current_node = lst;
+	node* next_node = NULL;
+
+	while (current_node != NULL) {
+		next_node = current_node->next;
+		free(current_node);
+		current_node = next_node;
+	}
+
+	return;
+}
+
+
 list list_read() {
 	// reads list from stdin
 	list root = NULL;
@@ -93,4 +107,17 @@ int get(list lst, const int key) {
 	else {
 		return current_node->value;
 	}
+}
+
+
+size_t list_len(list lst) {
+	node* current_node = lst;
+	size_t list_len = 0;
+
+	while (current_node != NULL) {
+		current_node = current_node->next;
+		list_len += 1;
+	}
+
+	return list_len;
 }

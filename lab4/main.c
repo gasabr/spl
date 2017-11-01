@@ -3,6 +3,7 @@
 
 int main() {
 	int x, res, i, find_key=2;
+	size_t list_len_ = 0;
 
 	list l = list_read();
 	printf("Read list: ");
@@ -18,4 +19,10 @@ int main() {
 
 	x = get(l, find_key);
 	printf("list[%d] = %d\n", find_key, x);
+
+	// WTF: it won't work with var named list_len
+	list_len_ = list_len(l);
+	printf("list's length = %lu\n", list_len_);
+
+	list_free(l);
 }

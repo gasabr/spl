@@ -25,3 +25,7 @@ void list_add_back(list* lst, int key, int value);
 void list_add_front(list* lst, int key, int value);
 
 int get(list lst, int key);
+
+void list_free(list lst);
+
+size_t list_len(list lst);
