@@ -14,3 +14,11 @@ read_result from_bmp(FILE* in, image* dest) {
 
 	return READ_OK;
 }
+
+
+void print_image_info(const image* img) {
+	printf("Image {\n");
+	printf("\twidth=%llu,\n", img->width);
+	printf("\theight=%llu,\n", img->height);
+	printf("}");
+}

@@ -28,6 +28,6 @@ typedef struct __attribute__((packed))
 
 
 read_result bmp_header_read(FILE* in, bmp_header* const dest);
-void bmp_header_print(bmp_header* const header);
+void bmp_header_print(const bmp_header* header);
 
 #endif

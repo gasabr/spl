@@ -2,18 +2,18 @@
 
 
 int main() {
-	char* filename = "/Users/gasabr/itmo/debts/lsp/src/lab5/images/spiral.bmp";
+	char* filename = "/Users/gasabr/itmo/debts/lsp/src/lab5/images/collision.bmp";
 
 	FILE* img_file = fopen(filename, "rb");
 	if (!img_file) {
 		printf("Can not open file!\n");
 	}
-	/* image* img = malloc(sizeof(image)); */
-	bmp_header* bmp = malloc(sizeof(bmp_header));
-	read_result err = bmp_header_read(img_file, bmp);
+
+	image* img = malloc(sizeof(image));
+	read_result err = from_bmp(img_file, img);
 	if (err != READ_OK) {
 		printf("RETARD ALLERT.\n");
 	}
 
-	bmp_header_print(bmp);
+	print_image_info(img);
 }

@@ -12,7 +12,7 @@ read_result bmp_header_read(FILE* in, bmp_header* dest) {
 }
 
 
-void bmp_header_print(bmp_header* const header) {
+void bmp_header_print(const bmp_header* header) {
 	printf("BMPHeader {\n");
 	printf("\tbfType=%u,\n", header->bfType);
 	printf("\tbfileSize=%u,\n", header->bfileSize);

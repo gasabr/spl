@@ -20,4 +20,6 @@ typedef struct Image {
 read_result  from_bmp(FILE* in, image* const dest);
 write_result to_bmp(FILE* out, image* const source);
 
+void print_image_info(const image* img);
+
 #endif
