@@ -1,4 +1,6 @@
-#include <stddef.h>
+#ifndef LIST_H
+#define LIST_H
+
 #include <stdio.h>
 #include <stdlib.h>		// malloc
 
@@ -31,3 +33,5 @@ void list_free(list lst);
 size_t list_len(list lst);
 int list_sum(list lst);
 node* list_node_at(list lst, size_t at);
+
+#endif // LIST_H
