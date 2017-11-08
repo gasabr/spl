@@ -13,4 +13,9 @@ typedef enum WriteResult {
 	WRITE_ERROR
 } write_result;
 
+typedef enum FreeResult {
+	FREE_OK = 0,
+	FREE_ERROR
+} free_result;
+
 #endif

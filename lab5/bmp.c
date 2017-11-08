@@ -5,6 +5,7 @@ read_result bmp_header_read(FILE* in, bmp_header* dest) {
 	size_t read_headers = fread(dest, sizeof(bmp_header), 1, in);
 
 	if (read_headers < 1) {
+		printf("Can not read header!");
 		return READ_INVALID_SIGNATURE;
 	}
 

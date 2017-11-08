@@ -14,12 +14,14 @@ typedef pixel** pixels;
 typedef struct Image {
 	uint64_t width, height;
 	pixels data;
+	bmp_header* header;
 } image;
 
 
-read_result  from_bmp(FILE* in, image* const dest);
-write_result to_bmp(FILE* out, image* const source);
+read_result  image_read_bmp(FILE* in, image* dest);
+write_result image_write_bmp(FILE* out, image* source);
+free_result  image_free(image* img);
 
-void print_image_info(const image* img);
+void image_print_info(const image* img);
 
 #endif
