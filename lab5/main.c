@@ -9,7 +9,6 @@ int main() {
 	if (!img_file) {
 		printf("Can not open file!\n");
 	}
-	fclose(img_file);
 
 	image* img = malloc(sizeof(image));
 	read_result err = image_read_bmp(img_file, img);

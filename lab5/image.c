@@ -19,11 +19,12 @@ read_result image_read_bmp(FILE* in, image* dest) {
 	int stride = (dest->header->biWidth * (dest->header->biBitCount / 8) + 3) & ~3;
 	printf("stride=%d\n", stride);
 
+	fseek(in, bmp->bOffBits, SEEK_SET);
 	for (int i = 0; i < dest->header->biHeight; ++i) {
 		dest->data[i] = malloc(sizeof(pixel) * dest->width);
 		read_pixels = fread(dest->data[i], sizeof(pixel), dest->width, in);
 		if (read_pixels < dest->width) {
-			printf("Break on height: %d\n", i);
+			printf("Break on height: %d with %lu pixels\n", i, read_pixels);
 			return READ_INVALID_BITS;
 		}
 	}
@@ -38,7 +39,7 @@ write_result image_write_bmp(FILE* out, image* source) {
 	if (written < 1) {
 		return WRITE_ERROR;
 	}
-	written = fwrite(source->data, source->header->biSize - sizeof(bmp_header), 1, out);
+	written = fwrite(source->data, sizeof(pixel)*source->width*source->height, 1, out);
 	if (written < 1) {
 		return WRITE_ERROR;
 	}
