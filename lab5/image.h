@@ -15,7 +15,6 @@ typedef pixel** pixels;
 typedef struct Image {
 	uint64_t width, height;
 	pixels data;
-	bmp_header* header;
 } image;
 
 
