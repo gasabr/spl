@@ -4,8 +4,8 @@
 
 
 int main() {
-	char* filename_in = "/Users/gasabr/itmo/debts/lsp/src/lab5/images/ball.bmp";
-	char* filename_out = "/Users/gasabr/itmo/debts/lsp/src/lab5/images/ball_out.bmp";
+	char* filename_in = "images/ball.bmp";
+	char* filename_out = "images/ball_out.bmp";
 
 	FILE* img_file = fopen(filename_in, "rb");
 	if (!img_file) {
