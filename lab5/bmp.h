@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <math.h>
+#include <errno.h>
 
 #include "results.h"
 
@@ -28,6 +29,7 @@ typedef struct __attribute__((packed))
 } bmp_header;
 
 
+void show_errno(void);
 read_result bmp_header_read(FILE* in, bmp_header* const dest);
 void bmp_header_print(const bmp_header* header);
 

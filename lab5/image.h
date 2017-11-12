@@ -18,11 +18,16 @@ typedef struct Image {
 } image;
 
 
+typedef enum RotationDirection {
+	RD_LEFT = 0,
+	RD_RIGHT
+} rotation_direction;
+
 read_result  image_read_bmp(FILE* in, image* dest);
 write_result image_write_bmp(FILE* out, image* source);
 free_result  image_free(image* img);
 
-image image_rotate(image* original, float angle);
+image image_rotate(image* original, rotation_direction rd, float angle);
 
 void image_print_info(const image* img);
 

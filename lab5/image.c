@@ -71,9 +71,14 @@ void image_print_info(const image* img) {
 }
 
 
-image image_rotate(image* original, float angle) {
+image image_rotate(image* original, rotation_direction rd, float angle) {
+	// angle is always >0
 	int i=0, j=0, new_i=0, new_j=0;
 	double rotation_matrix[2][2];
+
+	if (rd == RD_RIGHT) {
+		angle -= 2*angle;
+	}
 
 	rotation_matrix[0][0] = round(cos(angle) * 1000) / 1000;
 	rotation_matrix[0][1] = round(-sin(angle) * 1000) / 1000;

@@ -1,10 +1,27 @@
 #include "bmp.h"
 
 
+void show_errno(void)
+{
+    if(errno==EDOM)   printf("domain error");
+    if(errno==EILSEQ) printf("illegal sequence");
+    if(errno==ERANGE) printf("pole or range error");
+    if(errno==0)      printf("no error");
+    printf(" occurred\n");
+}
+
 read_result bmp_header_read(FILE* in, bmp_header* dest) {
 	size_t read_headers = fread(dest, sizeof(bmp_header), 1, in);
+	printf("%lu\n", sizeof(bmp_header));
 
-	if (read_headers < 1) {
+	if (read_headers == 1) {
+		printf("File read succesfully\n");
+	} else {
+		if (feof(in)) {
+			printf("Unexpected EOF while reading bmp.\n");
+		} else if (ferror(in)) {
+			printf("FILE reading err=%d\n", ferror(in));
+		}
 		return READ_INVALID_SIGNATURE;
 	}
 
