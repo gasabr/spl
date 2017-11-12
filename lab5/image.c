@@ -39,22 +39,32 @@ read_result image_read_bmp(FILE* in, image* dest) {
 
 
 write_result image_write_bmp(FILE* out, image* source) {
-	size_t written = 0;
+	// amount of written to file pixels
+	size_t written = 0, offset = 0;
 	int	i = 0, j = 0;
+
+	source->header->biHeight = source->height;
+	source->header->biWidth = source->width;
+
 	written = fwrite(source->header, sizeof(bmp_header), 1, out);
 	if (written < 1) {
 		return WRITE_ERROR;
 	}
+	fseek(out, sizeof(bmp_header), SEEK_SET);
+	
+	offset = source->width * sizeof(pixel) % 4;
+	if(offset != 0) {
+		offset = 4 - offset;
+	}
+
 	for (i = 0; i < source->height; ++i) {
 		for (j = 0; j < source->width; ++j) {
-			/* print_pixel_info(&source->data[i][j]); */
 			written = fwrite(&source->data[i][j], sizeof(pixel), 1, out);
-			/* printf("written="%) */
 			if (written < 1) {
-				printf("Failed on the row: %d\n", i);
 				return WRITE_ERROR;
 			}
 		}
+		fseek(out, offset, SEEK_CUR);
 	}
 	
 	return WRITE_OK;
@@ -71,12 +81,14 @@ void image_print_info(const image* img) {
 image image_rotate(image* original, float angle) {
 	int i=0, j=0, new_i=0, new_j=0;
 	double rotation_matrix[2][2];
+
 	rotation_matrix[0][0] = round(cos(angle) * 1000) / 1000;
 	rotation_matrix[0][1] = round(-sin(angle) * 1000) / 1000;
 	rotation_matrix[1][0] = round(sin(angle) * 1000) / 1000;
 	rotation_matrix[1][1] = round(-cos(angle) * 1000) / 1000;
 
-	printf("%f %f %f %f", rotation_matrix[0][0], rotation_matrix[0][1],
+	printf("Rotation matrix:\n");
+	printf("%f %f\n%f %f\n", rotation_matrix[0][0], rotation_matrix[0][1],
 		   	rotation_matrix[1][0], rotation_matrix[1][1]);
 
 	image rotated;
@@ -85,6 +97,11 @@ image image_rotate(image* original, float angle) {
 	rotated.width = original->height;
 	rotated.height = original->width;
 
+
+	printf("Image dimensions: (%llu, %llu) -> (%llu, %llu)\n",
+			original->width, original->height,
+			rotated.width, rotated.height);
+
 	rotated.data = malloc(sizeof(pixel*) * rotated.height);
 	for (i = 0; i < rotated.height; ++i) {
 		rotated.data[i] = malloc(sizeof(pixel) * rotated.width);
@@ -92,17 +109,18 @@ image image_rotate(image* original, float angle) {
 
 	image_print_info(&rotated);
 
-	// there should be code to fill image with background color
-	// for rotation on any angle
+	// for each pixel of original image
+	for (i = 0; i < original->height; i++) {
+		for (j = 0; j < original->width; j++) {
+			// find its [pixel] new position (new_i; new_j)
+			new_i = rotation_matrix[0][0] * i + rotation_matrix[0][1] * j;
+			new_j = rotation_matrix[1][0] * i + rotation_matrix[1][1] * j;
 
-	for (i = 0; i < original->height; ++i) {
-		for (j = 0; j < original->width; ++j) {
-			new_i = rotation_matrix[0][0] * i + rotation_matrix[1][0] * j;
-			/* printf("ni= %d * %f + %d, %f = %d\n", i, rotation_matrix[0][0],  */
-			/*         j, rotation_matrix[0][1], new_i); */
-			new_j = rotation_matrix[0][1] * i + rotation_matrix[1][1] * j;
-			/* printf("i=%d, j=%d-> ni=%d, nj=%d\n", i, j, new_i, new_j); */
-			rotated.data[new_i][new_j + rotated.height] = original->data[i][j];
+			/* printf("i=%d, j=%d\n", i, j); */
+			/* printf("new_i*=%d, new_j=%d\n", new_i + (int)rotated.height - 1, new_j); */
+			/* print_pixel_info(&original->data[i][j]); */
+			rotated.data[new_i + (int)rotated.height - 1][new_j] = original->data[i][j];
+			/* printf("i'm dead.\n"); */
 		}
 	}
 
