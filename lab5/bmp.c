@@ -3,6 +3,8 @@
 
 read_result bmp_header_read(FILE* in, bmp_header* dest) {
 	size_t read_headers = fread(dest, sizeof(bmp_header), 1, in);
+	// some 24bpp images have negotive height on my computer...
+	/* dest->biHeight = abs(dest->biHeight); */
 
 	if (read_headers < 1) {
 		printf("Can not read header!");

@@ -1,8 +1,10 @@
 #include "main.h"
 
+#define PI 3.1416
+
 
 int main() {
-	char* filename = "/Users/gasabr/itmo/debts/lsp/src/lab5/images/spiral_test.bmp";
+	char* filename = "/Users/gasabr/itmo/debts/lsp/src/lab5/images/ball.bmp";
 	char* filename_out = "/Users/gasabr/itmo/debts/lsp/src/lab5/images/spiral_out.bmp";
 
 	FILE* img_file = fopen(filename, "rb");
@@ -23,7 +25,12 @@ int main() {
 	if (!out_file) {
 		printf("Can not open out file!\n");
 	}
-	image_write_bmp(out_file, img);
+
+	image rotated = image_rotate(img, PI/2);
+	write_result w_err = image_write_bmp(out_file, &rotated);
+	if (w_err != WRITE_OK) {
+		printf("Can not write to bmp file. Error %d\n", w_err);
+	}
 	fclose(out_file);
 
 }

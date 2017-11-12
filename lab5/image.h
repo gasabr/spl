@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "bmp.h"
 #include "pixel.h"
@@ -21,6 +22,8 @@ typedef struct Image {
 read_result  image_read_bmp(FILE* in, image* dest);
 write_result image_write_bmp(FILE* out, image* source);
 free_result  image_free(image* img);
+
+image image_rotate(image* original, float angle);
 
 void image_print_info(const image* img);
 
