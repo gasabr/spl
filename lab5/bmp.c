@@ -12,11 +12,8 @@ void show_errno(void)
 
 read_result bmp_header_read(FILE* in, bmp_header* dest) {
 	size_t read_headers = fread(dest, sizeof(bmp_header), 1, in);
-	printf("%lu\n", sizeof(bmp_header));
 
-	if (read_headers == 1) {
-		printf("File read succesfully\n");
-	} else {
+	if (read_headers != 1) {
 		if (feof(in)) {
 			printf("Unexpected EOF while reading bmp.\n");
 		} else if (ferror(in)) {

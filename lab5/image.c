@@ -75,16 +75,17 @@ image image_rotate(image* original, rotation_direction rd, float angle) {
 	// angle is always >0
 	int i=0, j=0, new_i=0, new_j=0;
 	double rotation_matrix[2][2];
+	float rotation_angle = angle;
 
-	if (rd == RD_RIGHT) {
-		angle -= 2*angle;
+	if (rd == RD_LEFT) {
+		rotation_angle = -rotation_angle;
 	}
 
-	rotation_matrix[0][0] = round(cos(angle) * 1000) / 1000;
-	rotation_matrix[0][1] = round(-sin(angle) * 1000) / 1000;
-	rotation_matrix[1][0] = round(sin(angle) * 1000) / 1000;
-	rotation_matrix[1][1] = round(-cos(angle) * 1000) / 1000;
-
+	rotation_matrix[0][0] = round(cos(rotation_angle) * 1000) / 1000;
+	rotation_matrix[0][1] = round(-sin(rotation_angle) * 1000) / 1000;
+	rotation_matrix[1][0] = round(sin(rotation_angle) * 1000) / 1000;
+	rotation_matrix[1][1] = round(-cos(rotation_angle) * 1000) / 1000;
+	
 	image rotated;
 	// if angle == 90 this should always work
 	rotated.width = original->height;
@@ -102,7 +103,10 @@ image image_rotate(image* original, rotation_direction rd, float angle) {
 			new_i = rotation_matrix[0][0] * i + rotation_matrix[0][1] * j;
 			new_j = rotation_matrix[1][0] * i + rotation_matrix[1][1] * j;
 
-			rotated.data[new_i + (int)rotated.height - 1][new_j] = original->data[i][j];
+			if (rd == RD_RIGHT) new_i += (int)rotated.height - 1;
+			else new_j += (int)rotated.width - 1;
+
+			rotated.data[new_i][new_j] = original->data[i][j];
 		}
 	}
 

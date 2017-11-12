@@ -1,7 +1,5 @@
 #include "main.h"
 
-#define PI 3.1416
-
 
 int main(int argc, char** argv) {
 	if (argc < 3) {
@@ -13,9 +11,6 @@ int main(int argc, char** argv) {
 	char* rotation_directon_str = argv[3];
 	rotation_direction rd;
 
-	printf("%s\n", filename_in);
-	printf("%s\n", filename_out);
-
 	if (strcmp(rotation_directon_str, "left") == 0) {
 		rd = RD_LEFT;
 	} else if (strcmp(rotation_directon_str, "right") == 0) {
@@ -24,7 +19,6 @@ int main(int argc, char** argv) {
 		printf("Invalid rotation direction.\n");
 		exit(0);
 	}
-	printf("%d\n", rd);
 
 	FILE* img_file = fopen(filename_in, "rb");
 	if (img_file == NULL) {
@@ -44,14 +38,13 @@ int main(int argc, char** argv) {
 		exit(1);
 	}
 
-	image rotated = image_rotate(img, rd, PI/2);
+	image rotated = image_rotate(img, rd, M_PI_2);
 	write_result w_err = image_write_bmp(out_file, &rotated);
 	if (w_err != WRITE_OK) {
 		printf("Can not write to bmp file. Error %d\n", w_err);
 		exit(1);
 	}
 
-	/* fclose(img_file); */
 	fclose(out_file);
 
 }
