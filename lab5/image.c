@@ -112,3 +112,54 @@ image image_rotate(image* original, rotation_direction rd, float angle) {
 
 	return rotated;
 }
+
+image image_blur(image* img) {
+	int i=0, j=0;
+	int	k=0, l=0;
+	int blue_ch_sum=0, green_ch_sum=0, red_ch_sum=0, n_neighbour_pixs=0;
+
+	// create the new image
+	image blurred;
+	blurred.width = img->width;
+	blurred.height = img->height;
+	blurred.data = malloc(sizeof(pixel*) * img->height);
+	for (i = 0; i < blurred.height; i++) {
+		blurred.data[i] = malloc(sizeof(pixel) * blurred.width);
+	}
+
+	// for all the pixels in the new image
+	for (i=0; i < blurred.height; i++) {
+		for (j = 0; j < blurred.width; j++) {
+			if (i == 0 || j == 0 || i == blurred.height-1 || j == blurred.width-1) {
+				blurred.data[i][j] = img->data[i][j];
+				continue;
+			}
+
+			blue_ch_sum = 0;
+			green_ch_sum = 0;
+			red_ch_sum = 0;
+			n_neighbour_pixs = 0;
+
+			// count sum of channels around the pixel
+			for (k = i-1; k <= i+1; k++) {
+				for (l = j-1; l <= j+1; l++) {
+					/* if (k < 0) k++; */
+					/* if (k >= img->height) continue; */
+					/* if (l < 0) l++; */
+					/* if (l >= img->width) continue; */
+					/* printf("%d %d\n", k, l); */
+
+					blue_ch_sum = blue_ch_sum + img->data[k][l].b;
+					green_ch_sum += img->data[k][l].g;
+					red_ch_sum += img->data[k][l].r;
+					n_neighbour_pixs += 1;
+				}
+			}
+			/* printf("%d %d\n", (uint32_t)(blue_ch_sum / n_neighbour_pixs), img->data[i][j].b); */
+			blurred.data[i][j].b = (uint32_t)(blue_ch_sum / n_neighbour_pixs);
+			blurred.data[i][j].g = (uint32_t)(green_ch_sum / n_neighbour_pixs);
+			blurred.data[i][j].r = (uint32_t)(red_ch_sum / n_neighbour_pixs);
+		}
+	}
+	return blurred;
+}

@@ -30,5 +30,6 @@ free_result  image_free(image* img);
 image image_rotate(image* original, rotation_direction rd, float angle);
 
 void image_print_info(const image* img);
+image image_blur(image* img);
 
 #endif

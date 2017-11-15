@@ -38,8 +38,10 @@ int main(int argc, char** argv) {
 		exit(1);
 	}
 
-	image rotated = image_rotate(img, rd, M_PI_2);
-	write_result w_err = image_write_bmp(out_file, &rotated);
+	printf("wy\n");
+	/* image rotated = image_rotate(img, rd, M_PI_2); */
+	image blurred = image_blur(img);
+	write_result w_err = image_write_bmp(out_file, &blurred);
 	if (w_err != WRITE_OK) {
 		printf("Can not write to bmp file. Error %d\n", w_err);
 		exit(1);
