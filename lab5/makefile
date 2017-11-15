@@ -1,25 +1,24 @@
-FLAGS= -std=c99 -pedantic-errors -Wall -Werror
+CC=gcc
+LD=gcc
+PROG_NAME=bmp_transform
+CFLAGS= -std=c99 -pedantic-errors -Wall -Werror
+BUILD_DIR=./build
+SRC_DIR=./src
+BIN_DIR=./bin
+SRC_LIST = $(wildcard $(SRC_DIR)/*.c)
+OBJ_LIST = $(patsubst ./src/%.c,./build/%.o,$(SRC_LIST))
 
-all: main
 
-main: main.o bmp.o pixel.o image.o
-	gcc $(FLAGS) main.o bmp.o image.o pixel.o -o rotate
+all: $(PROG_NAME)
 
-main.o: main.c
-	gcc -c $(FLAGS) main.c -o main.o
+$(PROG_NAME): $(OBJ_LIST)
+	$(LD) $(OBJ_LIST) -o $(BIN_DIR)/$@
 
-image.o: image.c
-	gcc -c $(FLAGS) image.c -o image.o
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
-bmp.o: bmp.c
-	gcc -c $(FLAGS) bmp.c -o bmp.o
-
-pixel.o: pixel.c
-	gcc -c $(FLAGS) pixel.c -o pixel.o
+# .c.o:
+#         $(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f rotate
-	rm -f main.o
-	rm -f pixel.o
-	rm -f bmp.o
-
+	rm -f $(BIN_DIR)/$(PROG_NAME) $(BUILD_DIR)/*.o
