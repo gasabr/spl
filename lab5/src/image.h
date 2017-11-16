@@ -1,9 +1,12 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
+#define __STDC_FORMAT_MACROS
+
 #include <stdint.h>
 #include <stdlib.h>
 #include <math.h>
+#include <inttypes.h> // to printf uint32_t
 
 #include "bmp.h"
 #include "pixel.h"

@@ -65,8 +65,8 @@ write_result image_write_bmp(FILE* out, image* source) {
 
 void image_print_info(const image* img) {
     printf("Image {\n");
-    printf("\twidth=%llu,\n", img->width);
-    printf("\theight=%llu,\n", img->height);
+    printf("\twidth=%" PRIu64 "\n", img->width);
+    printf("\theight=%" PRIu64 ",\n", img->height);
     printf("}\n");
 }
 
@@ -143,12 +143,6 @@ image image_blur(image* img) {
 			// count sum of channels around the pixel
 			for (k = i-1; k <= i+1; k++) {
 				for (l = j-1; l <= j+1; l++) {
-					/* if (k < 0) k++; */
-					/* if (k >= img->height) continue; */
-					/* if (l < 0) l++; */
-					/* if (l >= img->width) continue; */
-					/* printf("%d %d\n", k, l); */
-
 					blue_ch_sum = blue_ch_sum + img->data[k][l].b;
 					green_ch_sum += img->data[k][l].g;
 					red_ch_sum += img->data[k][l].r;
