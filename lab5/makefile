@@ -2,9 +2,10 @@ CC=gcc
 LD=gcc
 PROG_NAME=bmp_transform
 CFLAGS= -std=c99 -pedantic-errors -Wall -Werror
+OS_NAME := $(shell uname -s)
 
 # for non-Mac linux
-ifneq ($(OS),Darwin)
+ifneq ($(OS_NAME),Darwin)
 	CFLAGS+= -lm
 	LFLAGS= -lm
 endif
