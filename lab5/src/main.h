@@ -8,4 +8,6 @@
 #include "image.h"
 #include "bmp.h"
 
+#define PI_2 1.5707963268
+
 #endif

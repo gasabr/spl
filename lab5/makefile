@@ -2,6 +2,11 @@ CC=gcc
 LD=gcc
 PROG_NAME=bmp_transform
 CFLAGS= -std=c99 -pedantic-errors -Wall -Werror
+
+ifneq ($(OS),Darwin)
+	CFLAGS+= -lm
+endif
+	
 BUILD_DIR=./build
 SRC_DIR=./src
 BIN_DIR=./bin
@@ -16,9 +21,6 @@ $(PROG_NAME): $(OBJ_LIST)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
-
-# .c.o:
-#         $(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	rm -f $(BIN_DIR)/$(PROG_NAME) $(BUILD_DIR)/*.o

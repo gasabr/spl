@@ -1,5 +1,17 @@
 #include "main.h"
 
+action_e parse_action(char* action_str) {
+	if (strcmp(action_str, "rotate_left") == 0) {
+		return ROTATE_LEFT;
+	} else if (strcmp(action_str, "rotate_right") == 0) {
+		return ROTATE_RIGHT; 
+	} else if (strcmp(action_str, "blur") == 0) {
+		return BLUR;
+	}
+   	else {
+		return NOT_KNOWN_ACTION;
+	}
+}
 
 int main(int argc, char** argv) {
 	if (argc < 3) {
@@ -8,16 +20,12 @@ int main(int argc, char** argv) {
 
 	char* filename_in = argv[1];
 	char* filename_out = argv[2];
-	char* rotation_directon_str = argv[3];
-	rotation_direction rd;
+	char* action_str = argv[3];
+	action_e action = parse_action(action_str);
 
-	if (strcmp(rotation_directon_str, "left") == 0) {
-		rd = RD_LEFT;
-	} else if (strcmp(rotation_directon_str, "right") == 0) {
-		rd = RD_RIGHT;
-	} else {
-		printf("Invalid rotation direction.\n");
-		exit(0);
+	if (action == NOT_KNOWN_ACTION) {
+		printf("Invalid action, choose one of the: rotate_left, rotate_right, blur.\n");
+		exit(1);
 	}
 
 	FILE* img_file = fopen(filename_in, "rb");
@@ -32,16 +40,20 @@ int main(int argc, char** argv) {
 		exit(1);
 	}
 
+	// perform action
+	image result_image;
+	if (action == ROTATE_LEFT || action == ROTATE_RIGHT) {
+		result_image = image_rotate(img, action, PI_2);
+	} else {
+		result_image = image_blur(img);
+	}
+
 	FILE* out_file = fopen(filename_out, "wb");
 	if (!out_file) {
 		printf("Can not open output file!\n");
 		exit(1);
 	}
-
-	printf("wy\n");
-	/* image rotated = image_rotate(img, rd, M_PI_2); */
-	image blurred = image_blur(img);
-	write_result w_err = image_write_bmp(out_file, &blurred);
+	write_result w_err = image_write_bmp(out_file, &result_image);
 	if (w_err != WRITE_OK) {
 		printf("Can not write to bmp file. Error %d\n", w_err);
 		exit(1);
