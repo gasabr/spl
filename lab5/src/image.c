@@ -149,7 +149,6 @@ image image_blur(image* img) {
 					n_neighbour_pixs += 1;
 				}
 			}
-			/* printf("%d %d\n", (uint32_t)(blue_ch_sum / n_neighbour_pixs), img->data[i][j].b); */
 			blurred.data[i][j].b = (uint32_t)(blue_ch_sum / n_neighbour_pixs);
 			blurred.data[i][j].g = (uint32_t)(green_ch_sum / n_neighbour_pixs);
 			blurred.data[i][j].r = (uint32_t)(red_ch_sum / n_neighbour_pixs);

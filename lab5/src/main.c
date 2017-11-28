@@ -30,7 +30,8 @@ int main(int argc, char** argv) {
 
 	FILE* img_file = fopen(filename_in, "rb");
 	if (img_file == NULL) {
-		printf("Can not open file!\n");
+		perror("Error: ");
+		exit(1);
 	}
 
 	image* img = malloc(sizeof(image));
@@ -50,7 +51,7 @@ int main(int argc, char** argv) {
 
 	FILE* out_file = fopen(filename_out, "wb");
 	if (!out_file) {
-		printf("Can not open output file!\n");
+		perror("Error: ");
 		exit(1);
 	}
 	write_result w_err = image_write_bmp(out_file, &result_image);
@@ -60,5 +61,5 @@ int main(int argc, char** argv) {
 	}
 
 	fclose(out_file);
-
+	return 0;
 }
