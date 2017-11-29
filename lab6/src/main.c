@@ -9,10 +9,17 @@ int main() {
 
 	int* i = memalloc(sizeof(int));
 	float* j = memalloc(sizeof(float));
+
 	*i = 12;
-	*j = 12.9;
-	printf("%d\n", *i);
-	printf("%f\n", *j);
-	memfree(i);
+	*j = 128;
+
+	FILE* log = fopen("log", "wa+");
+	memalloc_debug_heap(log, init);
+
+	printf("%zu %d\n", (size_t)i, *i);
+	printf("%zu %f\n", (size_t)j, *j);
+
+	/* fclose(log); */
 	memfree(j);
+	memfree(i);
 }

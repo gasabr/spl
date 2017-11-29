@@ -30,3 +30,6 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 
 clean:
 	rm -f $(BIN_DIR)/$(PROG_NAME) $(BUILD_DIR)/*.o
+
+run:
+	$(BIN_DIR)/$(PROG_NAME)

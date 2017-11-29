@@ -1,0 +1,9 @@
+--------------------
+start: 0x10eb81000
+size: 8
+is_free: 0
+C000
+start: 0x10eb81019
+size: 8
+is_free: 0
+00043

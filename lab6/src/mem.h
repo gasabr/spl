@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <sys/mman.h>
+#include <errno.h>
 
 #define HEAP_START ((void*)0x04040000)
 #define DEBUG_FIRST_BYTES 4
@@ -26,5 +27,9 @@ void memfree(void*);
 
 mem_t* find_block(size_t);
 mem_t* memmap(mem_t*, size_t);
+
+
+void memalloc_debug_struct_info( FILE* f, mem_t const* const address );
+void memalloc_debug_heap( FILE* f, mem_t const* ptr );
 
 #endif // MEM_H

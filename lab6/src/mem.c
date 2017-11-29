@@ -18,7 +18,7 @@ void* memalloc(size_t query) {
 
 	// try to find suitable block f memory for given n_bytes
 	// (amoong existing ones)
-	mem = find_block(query + sizeof(mem_t) + MIN_BLOCK_SIZE);
+	mem = find_block(query);
 
 	// if there is no such block, try to map the new one
 	if (mem == NULL) {
@@ -30,8 +30,12 @@ void* memalloc(size_t query) {
 			last_block = last_block->next;
 		}
 		new_block = memmap(last_block, query + sizeof(mem_t));
+		if (new_block == NULL) {
+			return NULL;
+		}
 
 		last_block->next = new_block;
+		printf("new last block addr = %zu\n", (size_t)last_block->next);
 		data_ptr = (void*)((size_t)new_block + sizeof(mem_t));
 
 		return data_ptr;
@@ -39,15 +43,19 @@ void* memalloc(size_t query) {
 	} else {
 		printf("mem!=NULL\n");
 		// create new block after the found one
-		new_block = (mem_t*) ((size_t)mem + sizeof(mem_t) + query);
-		new_block->is_free = true;
-		// link the next in the chain
-		new_block->next = mem->next;
-		new_block->capacity = mem->capacity - query - sizeof(mem_t);
+		if (mem->capacity > query + MIN_BLOCK_SIZE + sizeof(mem_t)) {
+			new_block = (mem_t*) ((size_t)mem + sizeof(mem_t) + query);
+			new_block->is_free = true;
+			// link the next in the chain
+			new_block->next = mem->next;
+			new_block->capacity = mem->capacity - query - 2*sizeof(mem_t);
+		} else {
+			new_block = NULL;
+		}
 
-		mem->is_free = false;
+		mem->is_free  = false;
 		mem->capacity = query;
-		mem->next = new_block;
+		mem->next     = new_block;
 
 		// skip the header and return pointer to the payload part of the page
 		data_ptr = (void*)((size_t)mem + sizeof(mem_t));
@@ -61,6 +69,7 @@ void* memalloc(size_t query) {
 
 
 mem_t* find_block(size_t query) {
+	// Finds block of allocated memory which can hold `query` bytes
 	mem_t* current_block = map;
 
 	while (current_block != NULL) {
@@ -125,26 +134,40 @@ void* init_heap(size_t init_size) {
 
 
 void memfree(void* to_be_freed) {
-	size_t map_size;
+	printf("Enter ColeWorld\n");
 	mem_t* block_to_be_freed = (mem_t*)((size_t)to_be_freed - sizeof(mem_t));
-	mem_t* debug_addr = (mem_t*)((size_t)to_be_freed);
-	mem_t* current_block = map;
+	mem_t* next_block = (mem_t*)((size_t)to_be_freed + block_to_be_freed->capacity);
 
-	while (current_block->next != NULL && current_block != block_to_be_freed) {
-		printf("%zu vs %zu\n", (size_t)current_block, (size_t)block_to_be_freed);
-		current_block = current_block->next;
+	block_to_be_freed->is_free = true;
+
+	if (next_block->is_free) {
+		// merge two blocks
+		// skip the next one
+		block_to_be_freed->next = next_block->next;
+		// increase current block's capacity
+		block_to_be_freed->capacity += sizeof(mem_t) + next_block->capacity;
 	}
 
-	if (current_block == NULL) {
-		printf("google how to compare pointers\n");
-		printf("%zu vs %zu\n", (size_t)current_block, (size_t)block_to_be_freed);
-		printf("debug = %zu\n", (size_t)debug_addr);
-		return;
-	}
+	return;
+}
 
-	current_block->next = block_to_be_freed->next;
+// Debugging functions
+void memalloc_debug_struct_info( FILE* f,
+        mem_t const* const address ) {
+	size_t i;
+    fprintf( f,
+            "start: %p\nsize: %lu\nis_free: %d\n",
+            (void*)address,
+            address-> capacity,
+            address-> is_free );
+    for ( i = 0; i < DEBUG_FIRST_BYTES  &&  i < address->capacity; ++i )
+        fprintf( f, "%hhX",
+                ((char*)address)[ sizeof( mem_t ) + i ] );
+    putc( '\n', f );
+}
 
-	map_size = sizeof(mem_t) + block_to_be_freed->capacity;
-
-	munmap((void*)block_to_be_freed, map_size);
+void memalloc_debug_heap( FILE* f, mem_t const* ptr ) {
+	fprintf(f, "--------------------\n");
+    for( ; ptr; ptr = ptr->next )
+		memalloc_debug_struct_info( f, ptr );
 }
