@@ -1,3 +1,4 @@
 *.o
 */*.o
 lab5/images/
+lab?/bin

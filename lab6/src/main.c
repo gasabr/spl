@@ -7,8 +7,8 @@ int main() {
 		printf("can not initialize heap.\n");
 	}
 
-	int* i = memalloc(sizeof(int));
-	float* j = memalloc(sizeof(float));
+	int* i = malloc(sizeof(int));
+	float* j = malloc(sizeof(float));
 
 	*i = 12;
 	*j = 128;
@@ -19,7 +19,7 @@ int main() {
 	printf("%zu %d\n", (size_t)i, *i);
 	printf("%zu %f\n", (size_t)j, *j);
 
-	/* fclose(log); */
-	memfree(j);
-	memfree(i);
+	fclose(log);
+	free(j);
+	free(i);
 }

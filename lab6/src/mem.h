@@ -22,8 +22,9 @@ typedef struct mem {
 
 
 void* init_heap(size_t);
-void* memalloc(size_t n_bytes);
-void memfree(void*);
+void* malloc(size_t n_bytes);
+void free(void*);
+void* realloc(void*, size_t);
 
 mem_t* find_block(size_t);
 mem_t* memmap(mem_t*, size_t);

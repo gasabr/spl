@@ -1,11 +1,10 @@
 #include "mem.h"
 
 
-/* static mem_t* FIRST_BLOCK = NULL; */
 static mem_t* map;
 
 
-void* memalloc(size_t query) {
+void* malloc(size_t query) {
 	// check if there is a chunk with big enough to store requested n bytes
 
 	mem_t* mem;
@@ -24,7 +23,7 @@ void* memalloc(size_t query) {
 	if (mem == NULL) {
 		// if there is no appropriate chunk, try to mmap the new one and link it
 		// to the block chain :)
-		printf("mem==NULL\n");
+		/* printf("mem==NULL\n"); */
 		mem_t* last_block = map;
 		while (last_block->next != NULL) {
 			last_block = last_block->next;
@@ -35,13 +34,12 @@ void* memalloc(size_t query) {
 		}
 
 		last_block->next = new_block;
-		printf("new last block addr = %zu\n", (size_t)last_block->next);
 		data_ptr = (void*)((size_t)new_block + sizeof(mem_t));
 
 		return data_ptr;
 
 	} else {
-		printf("mem!=NULL\n");
+		/* printf("mem!=NULL\n"); */
 		// create new block after the found one
 		if (mem->capacity > query + MIN_BLOCK_SIZE + sizeof(mem_t)) {
 			new_block = (mem_t*) ((size_t)mem + sizeof(mem_t) + query);
@@ -133,7 +131,7 @@ void* init_heap(size_t init_size) {
 }
 
 
-void memfree(void* to_be_freed) {
+void free(void* to_be_freed) {
 	printf("Enter ColeWorld\n");
 	mem_t* block_to_be_freed = (mem_t*)((size_t)to_be_freed - sizeof(mem_t));
 	mem_t* next_block = (mem_t*)((size_t)to_be_freed + block_to_be_freed->capacity);
@@ -147,8 +145,19 @@ void memfree(void* to_be_freed) {
 		// increase current block's capacity
 		block_to_be_freed->capacity += sizeof(mem_t) + next_block->capacity;
 	}
-
 	return;
+}
+
+
+void* realloc(void* ptr, size_t new_size) {
+	mem_t* block = (mem_t*)((size_t)ptr - sizeof(mem_t));
+	if (block->capacity > new_size) {
+		block->is_free = true;
+		block->capacity = new_size;
+		return (void*)block;
+	} else {
+		return malloc(new_size);
+	}
 }
 
 // Debugging functions
