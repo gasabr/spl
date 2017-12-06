@@ -156,3 +156,26 @@ image image_blur(image* img) {
 	}
 	return blurred;
 }
+
+
+image image_sepia(image* img) {
+	int i=0, j=0;
+
+	// move copying image to the function
+	image filtered;
+	filtered.height = img->height;
+	filtered.width = img->width;
+
+	filtered.data = malloc(sizeof(pixel*) * img->height);
+	for (i = 0; i < filtered.height; i++) {
+		filtered.data[i] = malloc(sizeof(pixel) * filtered.width);
+	}
+
+	for (i=0; i < img->height; i++) {
+		for (j = 0; j < img->width; j++) {
+			filtered.data[i][j] = pixel_sepia(img->data[i][j]);
+		}
+	}
+
+	return filtered;
+}

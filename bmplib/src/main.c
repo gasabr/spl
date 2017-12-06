@@ -7,8 +7,9 @@ action_e parse_action(char* action_str) {
 		return ROTATE_RIGHT; 
 	} else if (strcmp(action_str, "blur") == 0) {
 		return BLUR;
-	}
-   	else {
+	} else if (strcmp(action_str, "sepia") == 0) {
+		return SEPIA;
+	} else {
 		return NOT_KNOWN_ACTION;
 	}
 }
@@ -30,7 +31,7 @@ int main(int argc, char** argv) {
 
 	FILE* img_file = fopen(filename_in, "rb");
 	if (img_file == NULL) {
-		perror("Error: ");
+		perror("Error opening input file");
 		exit(1);
 	}
 
@@ -45,13 +46,16 @@ int main(int argc, char** argv) {
 	image result_image;
 	if (action == ROTATE_LEFT || action == ROTATE_RIGHT) {
 		result_image = image_rotate(img, action, PI_2);
-	} else {
+	} else if (action == SEPIA) {
+		result_image = image_sepia(img);
+	} 
+	else {
 		result_image = image_blur(img);
 	}
 
 	FILE* out_file = fopen(filename_out, "wb");
 	if (!out_file) {
-		perror("Error: ");
+		perror("Error opening output file");
 		exit(1);
 	}
 	write_result w_err = image_write_bmp(out_file, &result_image);

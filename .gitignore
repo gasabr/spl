@@ -1,4 +1,4 @@
 *.o
 */*.o
-lab5/images/
+bmplib/images/
 lab?/bin
