@@ -37,6 +37,11 @@ free_result  image_free(image* img);
 image image_rotate(image* original, action_e rd, float angle);
 image image_blur(image* img);
 image image_sepia(image* img);
+image image_sepia_asm(image* img);
+
+void sepia_blue(float[4], float[4], float[4], float[12]);
+void sepia_red(float[4], float[4], float[4], float[12]);
+void sepia_green(float[4], float[4], float[4], float[12]);
 
 void image_print_info(const image* img);
 

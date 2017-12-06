@@ -11,7 +11,9 @@ void print_pixel_info(const pixel* px) {
 
 
 unsigned char sat( uint64_t x) {
-    if (x < 256) return x; return 255;
+    if (x < 256) 
+		return x; 
+	return 255;
 }
 
 

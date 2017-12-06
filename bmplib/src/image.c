@@ -161,7 +161,7 @@ image image_blur(image* img) {
 image image_sepia(image* img) {
 	int i=0, j=0;
 
-	// move copying image to the function
+	// TODO: move copying image to the function
 	image filtered;
 	filtered.height = img->height;
 	filtered.width = img->width;
@@ -174,6 +174,50 @@ image image_sepia(image* img) {
 	for (i=0; i < img->height; i++) {
 		for (j = 0; j < img->width; j++) {
 			filtered.data[i][j] = pixel_sepia(img->data[i][j]);
+		}
+	}
+
+	return filtered;
+}
+
+
+image image_sepia_asm(image* img) {
+	int i=0, j=0, k=0;
+	float b[4];
+	float g[4];
+	float r[4];
+	float new_b[12];
+	float new_g[12];
+	float new_r[12];
+
+	image filtered;
+	filtered.height = img->height;
+	filtered.width = img->width;
+
+	filtered.data = malloc(sizeof(pixel*) * img->height);
+	for (i = 0; i < filtered.height; i++) {
+		filtered.data[i] = malloc(sizeof(pixel) * filtered.width);
+	}
+
+	for (i = 0; i < img->height; i++) {
+		// for all the pixels in the row except last 3, if width % 4 != 0
+		for (j = 0; j < img->width - 3; j += 4) {
+			for (k = 0; k < 4; k++) {
+				b[k] = img->data[i][j].b;
+				g[k] = img->data[i][j].g;
+				r[k] = img->data[i][j].r;
+			}
+
+			sepia_blue(b, g, r, new_b);
+			sepia_green(b, g, r, new_g);
+			sepia_red(b, g, r, new_r);
+
+			for (k = 0; k < 4; k++) {
+				filtered.data[i][j+k].b = new_b[k];
+				filtered.data[i][j+k].g = new_g[k];
+				filtered.data[i][j+k].r = new_r[k];
+			}
+
 		}
 	}
 

@@ -17,16 +17,19 @@ SRC_LIST = $(wildcard $(SRC_DIR)/*.c)
 OBJ_LIST = $(patsubst ./src/%.c,./build/%.o,$(SRC_LIST))
 
 
-all: directories $(PROG_NAME)
+all: directories sepia_asm $(PROG_NAME)
 
 directories:
 	mkdir -p $(BUILD_DIR) $(BIN_DIR)
 
 $(PROG_NAME): $(OBJ_LIST)
-	$(LD) $(LFLAGS) $(OBJ_LIST) -o $(BIN_DIR)/$@
+	$(LD) $(LFLAGS) $(OBJ_LIST) $(BUILD_DIR)/sepia.o -o $(BIN_DIR)/$@
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
+
+sepia_asm:
+	nasm -felf64 src/sepia.asm -o $(BUILD_DIR)/sepia.o
 
 clean:
 	rm -f $(BIN_DIR)/$(PROG_NAME) $(BUILD_DIR)/*.o

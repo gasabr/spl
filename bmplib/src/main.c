@@ -16,7 +16,8 @@ action_e parse_action(char* action_str) {
 
 int main(int argc, char** argv) {
 	if (argc < 3) {
-		printf("Usage ./rotate <input file name> <output file name> <left|right>\n");
+		printf("Usage ./bmp_transform <input file name> <output file name>" 
+				"<left|right>\n");
 	}
 
 	char* filename_in = argv[1];
@@ -25,7 +26,8 @@ int main(int argc, char** argv) {
 	action_e action = parse_action(action_str);
 
 	if (action == NOT_KNOWN_ACTION) {
-		printf("Invalid action, choose one of the: rotate_left, rotate_right, blur.\n");
+		printf("Invalid action, choose one of the: rotate_left,"
+				"rotate_right, blur, sepia.\n");
 		exit(1);
 	}
 
