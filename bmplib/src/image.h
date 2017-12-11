@@ -26,6 +26,7 @@ typedef enum ActionEnum {
 	ROTATE_RIGHT,
 	BLUR,
 	SEPIA,
+	SEPIA_ASM,
 	NOT_KNOWN_ACTION
 } action_e;
 

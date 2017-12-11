@@ -9,10 +9,13 @@ action_e parse_action(char* action_str) {
 		return BLUR;
 	} else if (strcmp(action_str, "sepia") == 0) {
 		return SEPIA;
+	} else if (strcmp(action_str, "sepia_asm") == 0) {
+		return SEPIA_ASM;
 	} else {
 		return NOT_KNOWN_ACTION;
 	}
 }
+
 
 int main(int argc, char** argv) {
 	if (argc < 3) {
@@ -24,6 +27,9 @@ int main(int argc, char** argv) {
 	char* filename_out = argv[2];
 	char* action_str = argv[3];
 	action_e action = parse_action(action_str);
+
+	clock_t start, finish;
+	double time_spent;
 
 	if (action == NOT_KNOWN_ACTION) {
 		printf("Invalid action, choose one of the: rotate_left,"
@@ -44,16 +50,22 @@ int main(int argc, char** argv) {
 		exit(1);
 	}
 
+	start = clock();
 	// perform action
 	image result_image;
 	if (action == ROTATE_LEFT || action == ROTATE_RIGHT) {
 		result_image = image_rotate(img, action, PI_2);
 	} else if (action == SEPIA) {
 		result_image = image_sepia(img);
-	} 
-	else {
+	} else if (action == SEPIA_ASM) {
+		result_image = image_sepia_asm(img);
+	} else {
 		result_image = image_blur(img);
 	}
+	finish = clock();
+	time_spent = (double)(finish - start) / CLOCKS_PER_SEC;
+
+	printf("%10s time: %f\n", action_str, time_spent);
 
 	FILE* out_file = fopen(filename_out, "wb");
 	if (!out_file) {

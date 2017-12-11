@@ -183,12 +183,6 @@ image image_sepia(image* img) {
 
 image image_sepia_asm(image* img) {
 	int i=0, j=0, k=0;
-	float b[4];
-	float g[4];
-	float r[4];
-	float new_b[12];
-	float new_g[12];
-	float new_r[12];
 
 	image filtered;
 	filtered.height = img->height;
@@ -201,16 +195,25 @@ image image_sepia_asm(image* img) {
 
 	for (i = 0; i < img->height; i++) {
 		// for all the pixels in the row except last 3, if width % 4 != 0
-		for (j = 0; j < img->width - 3; j += 4) {
+		for (j = 0; j < img->width; j += 4) {
+			float b[4], new_b[4];
+			float g[4], new_g[4];
+			float r[4], new_r[4];
+
+			if (j >= img->width - 3) {
+				break;
+			}
 			for (k = 0; k < 4; k++) {
-				b[k] = img->data[i][j].b;
-				g[k] = img->data[i][j].g;
-				r[k] = img->data[i][j].r;
+				b[k] = img->data[i][j + k].b;
+				g[k] = img->data[i][j + k].g;
+				r[k] = img->data[i][j + k].r;
 			}
 
 			sepia_blue(b, g, r, new_b);
 			sepia_green(b, g, r, new_g);
 			sepia_red(b, g, r, new_r);
+
+			// printf("%f -> %f\n", b[0], new_b[0]);
 
 			for (k = 0; k < 4; k++) {
 				filtered.data[i][j+k].b = new_b[k];

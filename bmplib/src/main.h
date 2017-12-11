@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>  // strcmp
+#include <time.h>
 
 #include "image.h"
 #include "bmp.h"
