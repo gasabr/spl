@@ -213,16 +213,139 @@ image image_sepia_asm(image* img) {
 			sepia_green(b, g, r, new_g);
 			sepia_red(b, g, r, new_r);
 
-			// printf("%f -> %f\n", b[0], new_b[0]);
-
 			for (k = 0; k < 4; k++) {
 				filtered.data[i][j+k].b = new_b[k];
 				filtered.data[i][j+k].g = new_g[k];
 				filtered.data[i][j+k].r = new_r[k];
 			}
-
 		}
 	}
 
 	return filtered;
 }
+
+
+image image_sepia_threaded(image* img) {
+	int i=0;
+
+	image filtered;
+	filtered.height = img->height;
+	filtered.width = img->width;
+
+	filtered.data = malloc(sizeof(pixel*) * img->height);
+	for (i = 0; i < filtered.height; i++) {
+		filtered.data[i] = malloc(sizeof(pixel) * filtered.width);
+	}
+
+	images_pair_t images;
+	images.src  = img;
+	images.dest = &filtered;
+
+	pthread_t thread_red, thread_blue, thread_green;
+	pthread_create(&thread_red, NULL, _sepia_red, (void*)&images);
+	pthread_create(&thread_blue, NULL, _sepia_blue, &images);
+	pthread_create(&thread_green, NULL, _sepia_green, &images);
+
+	pthread_join(thread_red, NULL);
+	pthread_join(thread_blue, NULL);
+	pthread_join(thread_green, NULL);
+
+	return filtered;
+}
+
+
+void* _sepia_blue(void* images_) {
+	images_pair_t* images = (images_pair_t*) images_;
+	size_t i, j, k;
+	image* src = images->src;
+	image* dest = images->dest;
+
+	for (i = 0; i < src->height; i++) {
+		// for all the pixels in the row except last 3, if width % 4 != 0
+		for (j = 0; j < src->width; j += 4) {
+			float b[4];
+			float g[4];
+			float r[4];
+			float filtered[4];
+
+			for (k = 0; k < 4; k++) {
+				b[k] = src->data[i][j + k].b;
+				g[k] = src->data[i][j + k].g;
+				r[k] = src->data[i][j + k].r;
+			}
+
+			sepia_blue(b, g, r, filtered);
+
+			for (k = 0; k < 4; k++) {
+				dest->data[i][j+k].b = filtered[k];
+
+			}
+		}
+	}
+	return NULL;
+}
+
+
+void* _sepia_green(void* images_) {
+	images_pair_t* images = (images_pair_t*) images_;
+	size_t i, j, k;
+	image* src = images->src;
+	image* dest = images->dest;
+
+	for (i = 0; i < src->height; i++) {
+		// for all the pixels in the row except last 3, if width % 4 != 0
+		for (j = 0; j < src->width; j += 4) {
+			float b[4];
+			float g[4];
+			float r[4];
+			float filtered[4];
+
+			for (k = 0; k < 4; k++) {
+				b[k] = src->data[i][j + k].b;
+				g[k] = src->data[i][j + k].g;
+				r[k] = src->data[i][j + k].r;
+			}
+
+			sepia_green(b, g, r, filtered);
+
+			for (k = 0; k < 4; k++) {
+				dest->data[i][j+k].g = filtered[k];
+
+			}
+		}
+	}
+	return NULL;
+}
+
+
+void* _sepia_red(void* images_) {
+	images_pair_t* images = (images_pair_t*) images_;
+	size_t i, j, k;
+	image* src = images->src;
+	image* dest = images->dest;
+
+	for (i = 0; i < src->height; i++) {
+		// for all the pixels in the row except last 3, if width % 4 != 0
+		for (j = 0; j < src->width; j += 4) {
+			float b[4];
+			float g[4];
+			float r[4];
+			float filtered[4];
+
+			for (k = 0; k < 4; k++) {
+				b[k] = src->data[i][j + k].b;
+				g[k] = src->data[i][j + k].g;
+				r[k] = src->data[i][j + k].r;
+			}
+
+			sepia_red(b, g, r, filtered);
+
+			for (k = 0; k < 4; k++) {
+				dest->data[i][j+k].r = filtered[k];
+
+			}
+		}
+	}
+	return NULL;
+}
+

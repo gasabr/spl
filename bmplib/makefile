@@ -1,7 +1,7 @@
 CC=gcc
 LD=gcc
 PROG_NAME=bmp_transform
-CFLAGS= -std=c99 -pedantic-errors -Wall -Werror -O2
+CFLAGS= -std=c99 -pedantic-errors -Wall -Werror -O2 -pthread
 OS_NAME := $(shell uname -s)
 
 # for non-Mac linux

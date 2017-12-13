@@ -11,6 +11,8 @@ action_e parse_action(char* action_str) {
 		return SEPIA;
 	} else if (strcmp(action_str, "sepia_asm") == 0) {
 		return SEPIA_ASM;
+	} else if (strcmp(action_str, "sepia_threaded") == 0) {
+		return SEPIA_THREADED;
 	} else {
 		return NOT_KNOWN_ACTION;
 	}
@@ -33,7 +35,7 @@ int main(int argc, char** argv) {
 
 	if (action == NOT_KNOWN_ACTION) {
 		printf("Invalid action, choose one of the: rotate_left,"
-				"rotate_right, blur, sepia.\n");
+				"rotate_right, blur, sepia, sepia_asm, sepia_threaded.\n");
 		exit(1);
 	}
 
@@ -59,6 +61,8 @@ int main(int argc, char** argv) {
 		result_image = image_sepia(img);
 	} else if (action == SEPIA_ASM) {
 		result_image = image_sepia_asm(img);
+	} else if (action == SEPIA_THREADED) {
+		result_image = image_sepia_threaded(img);
 	} else {
 		result_image = image_blur(img);
 	}

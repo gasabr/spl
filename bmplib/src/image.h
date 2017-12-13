@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <inttypes.h> // to printf uint32_t
+#include <pthread.h>
 
 #include "bmp.h"
 #include "pixel.h"
@@ -27,8 +28,16 @@ typedef enum ActionEnum {
 	BLUR,
 	SEPIA,
 	SEPIA_ASM,
+	SEPIA_THREADED,
 	NOT_KNOWN_ACTION
 } action_e;
+
+typedef struct ImagesPair {
+	image* src;
+	image* dest;
+} images_pair_t;
+
+typedef int (*sepia_channel_filter)(float[4], float[4], float[4], float[4]);
 
 
 read_result  image_read_bmp(FILE* in, image* dest);
@@ -39,6 +48,11 @@ image image_rotate(image* original, action_e rd, float angle);
 image image_blur(image* img);
 image image_sepia(image* img);
 image image_sepia_asm(image* img);
+image image_sepia_threaded(image* img);
+
+void* _sepia_blue(void* images);
+void* _sepia_green(void* images);
+void* _sepia_red(void* images);
 
 void sepia_blue(float[4], float[4], float[4], float[12]);
 void sepia_red(float[4], float[4], float[4], float[12]);
