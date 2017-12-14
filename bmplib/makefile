@@ -7,7 +7,7 @@ OS_NAME := $(shell uname -s)
 # for non-Mac linux
 ifneq ($(OS_NAME),Darwin)
 	CFLAGS+= -lm
-	LFLAGS= -lm
+	LFLAGS= -lm -pthread
 endif
 	
 BUILD_DIR=./build

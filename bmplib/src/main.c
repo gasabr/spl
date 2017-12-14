@@ -13,6 +13,8 @@ action_e parse_action(char* action_str) {
 		return SEPIA_ASM;
 	} else if (strcmp(action_str, "sepia_threaded") == 0) {
 		return SEPIA_THREADED;
+	} else if (strcmp(action_str, "sepia_threaded_v2") == 0) {
+		return SEPIA_THREADED_V2;
 	} else {
 		return NOT_KNOWN_ACTION;
 	}
@@ -63,6 +65,8 @@ int main(int argc, char** argv) {
 		result_image = image_sepia_asm(img);
 	} else if (action == SEPIA_THREADED) {
 		result_image = image_sepia_threaded(img);
+	} else if (action == SEPIA_THREADED_V2) {
+		result_image = image_sepia_threaded_v2(img, 4);
 	} else {
 		result_image = image_blur(img);
 	}
